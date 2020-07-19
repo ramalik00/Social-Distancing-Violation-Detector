@@ -50,7 +50,7 @@ while True:
                 for i in range(0,len(centroids)):
                         for j in range(i+1,len(centroids)):
                                 D=np.linalg.norm(centroids[i]-centroids[j])
-                                if D <75:
+                                if D <125:
                                         a.add(i)
                                         a.add(j)
         for (i,(prob,bounding_box,classes,centroid)) in enumerate(results):
