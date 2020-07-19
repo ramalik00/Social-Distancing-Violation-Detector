@@ -2,13 +2,42 @@ import numpy as np
 import cv2
 from imutils.object_detection import non_max_suppression
 
+#Getting Bird's Eye perspective for the frame
+def compute_perspective_transform(corner_points,width,height,img):
+       
+        corner_points_array = np.float32(corner_points)
+        img_params = np.float32([[0,0],[width,0],[0,height],[width,height]])
+        matrix = cv2.getPerspectiveTransform(corner_points_array,img_params) 
+        return matrix
+
+def compute_point_perspective_transformation(matrix,centroids):
+        if len(centroids)==0: 
+                return (centroids)
+        
+        
+        list_points_to_detect=np.float32(centroids).reshape(-1, 1, 2)
+        transformed_points=cv2.perspectiveTransform(list_points_to_detect, matrix)
+       
+        transformed_centroids=[]
+        for i in range(0,transformed_points.shape[0]):
+                transformed_centroids.append([transformed_points[i][0][0],transformed_points[i][0][1]])
+        return transformed_centroids
+
 Min_Conf=0.3
-def detect_people(frame,net,ln,Labels):
+def detect_people(frame,net,last_layer,Labels):
 	(H,W)=frame.shape[:2]
+	#Enter the corner points of the contour for getting bird's eye perspective after callibrating the camera
+	r1,c1=(,)
+        r2,c2=(,)
+        r3,c3=(,)
+        r4,c4=(,)
+
+        matrix=compute_perspective_transform(((r3,c3),(r2,c2),(r4,c4),(r1,c1)),W,H,frame);
+	
 	results=[]
-	blob=cv2.dnn.blobFromImage(frame,1/255.0,(416, 416),swapRB=True,crop=False)
-	net.setInput(blob)
-	layerOutputs=net.forward(ln)
+	blob_image=cv2.dnn.blobFromImage(frame,1/255.0,(416, 416),swapRB=True,crop=False)
+	net.setInput(blob_image)
+	layerOutputs=net.forward(last_layer)
 	bounding_box=[]
 	probabilities=[]
 	classes=[]
@@ -28,7 +57,8 @@ def detect_people(frame,net,ln,Labels):
                                         Y_start=int(Y_center-(h/2))
                                         
                                         bounding_box.append([X_start,Y_start,X_start+int(w),Y_start+int(h)])
-                                        centroids.append((X_center,Y_center))
+                                        centroids.append((X_center,Y_start))
+					centroids=compute_point_perspective_transformation(matrix,centroids)
                                         probabilities.append(float(probability))
                                         classes.append(classID)
 				
