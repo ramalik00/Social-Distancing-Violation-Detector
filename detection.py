@@ -24,7 +24,7 @@ def compute_point_perspective_transformation(matrix,centroids):
         return transformed_centroids
 
 Min_Conf=0.3
-def detect_people(frame,net,last_layer,Labels):
+def detect_people(frame,model,last_layer,Labels):
 	(H,W)=frame.shape[:2]
 	#Enter the corner points of the contour for getting bird's eye perspective after callibrating the camera
 	r1,c1=(,)
@@ -36,8 +36,8 @@ def detect_people(frame,net,last_layer,Labels):
 	
 	results=[]
 	blob_image=cv2.dnn.blobFromImage(frame,1/255.0,(416, 416),swapRB=True,crop=False)
-	net.setInput(blob_image)
-	layerOutputs=net.forward(last_layer)
+	model.setInput(blob_image)
+	layerOutputs=model.forward(last_layer)
 	bounding_box=[]
 	probabilities=[]
 	classes=[]
