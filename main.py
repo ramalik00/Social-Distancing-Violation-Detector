@@ -56,12 +56,12 @@ while True:
         for (i,(prob,bounding_box,classes,centroid)) in enumerate(results):
                 if i in a:
                         X_start, Y_start, X_end, Y_end = bounding_box
-                        cv2.rectangle(frame,(X_start,Y_start),(X_end,Y_end),(0,0,255),2)
+                        cv2.rectangle(frame,(X_start,Y_start),(X_end,Y_end),(0,0,255),1)
                         count+=1
                         cv2.putText(frame,str(count),((X_start+X_end)//2,(Y_start+Y_end)//2),cv2.FONT_HERSHEY_SIMPLEX, 0.3,(0,255,0),2)
                 else:
                         X_start, Y_start,X_end,Y_end = bounding_box
-                        cv2.rectangle(frame,(X_start,Y_start),(X_end,Y_end),(0,255,0),2)
+                        cv2.rectangle(frame,(X_start,Y_start),(X_end,Y_end),(0,255,0),1)
 
 
                 
