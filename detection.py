@@ -6,7 +6,7 @@ from imutils.object_detection import non_max_suppression
 def compute_perspective_transform(corner_points,width,height,img):
        
         corner_points_array = np.float32(corner_points)
-        img_params = np.float32([[0,0],[width,0],[0,height],[width,height]])
+        img_params = np.float32([[0,0],[width-1,0],[0,height-1],[width-1,height-1]])
         matrix = cv2.getPerspectiveTransform(corner_points_array,img_params) 
         return matrix
 
